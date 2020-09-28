@@ -42,6 +42,7 @@ rundeck_config:
 #     value: com.mysql.jdbc.Driver
 
 # The settings for Rundeck. (Stored in: "{{ rundeck_rdeckbase }}/etc/framework.properties".)
+rundeck_framework_extra: []
 rundeck_framework:
   - parameter: framework.server.hostname
     value: "{{ ansible_fqdn }}"

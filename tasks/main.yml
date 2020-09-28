@@ -50,7 +50,7 @@
     mode: "0644"
   notify:
     - restart rundeck
-  loop: "{{ rundeck_framework }}"
+  loop: "{{ rundeck_framework + rundeck_framework_extra }}"
   loop_control:
     label: "{{ item.parameter }}"
 
