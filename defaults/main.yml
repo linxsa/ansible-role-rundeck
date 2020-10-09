@@ -8,6 +8,10 @@ rundeck_release_date: 20200427
 # Where to install rundeck.
 rundeck_rdeckbase: /opt/rundeck
 
+# Who is the system user and group
+rundeck_sys_user: rundeck
+rundeck_sys_group: rundeck
+
 # The Xmx memory size in mb. (Stored in: "{{ rundeck_rdeckbase }}/etc/profile".)
 rundeck_xmx: 1024
 rundeck_xms: 256
@@ -42,6 +46,7 @@ rundeck_config:
 #     value: com.mysql.jdbc.Driver
 
 # The settings for Rundeck. (Stored in: "{{ rundeck_rdeckbase }}/etc/framework.properties".)
+rundeck_framework_extra: []
 rundeck_framework:
   - parameter: framework.server.hostname
     value: "{{ ansible_fqdn }}"
@@ -80,6 +85,8 @@ rundeck_users:
   - username: "user"
     password: "user"
     roles: "user"
+
+rundeck_user_admin_full: no
 
 # Rundeck plugins to install
 rundeck_plugins: []

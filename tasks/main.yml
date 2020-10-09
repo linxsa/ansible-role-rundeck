@@ -8,6 +8,8 @@
     path: "{{ item }}"
     state: directory
     mode: "0755"
+    owner: "{{ rundeck_sys_user }}"
+    group: "{{ rundeck_sys_group }}"
   loop:
     - "{{ rundeck_rdeckbase }}"
     - "{{ rundeck_rdeckbase }}/etc"
@@ -17,9 +19,13 @@
   get_url:
     url: "{{ rundeck_download_url }}"
     dest: "{{ rundeck_rdeckbase }}/rundeck-{{ rundeck_version }}-{{ rundeck_release_date }}.war"
+    owner: "{{ rundeck_sys_user }}"
+    group: "{{ rundeck_sys_group }}"
 
 - name: unpack rundeck
   command: "java -jar {{ rundeck_war }} --installonly"
+  become: yes
+  become_user: "{{ rundeck_sys_user }}"
   args:
     chdir: "{{ rundeck_rdeckbase }}"
     creates: "{{ rundeck_rdeckbase }}/server"
@@ -35,6 +41,8 @@
     regexp: "^{{ item.parameter }}"
     create: yes
     mode: "0644"
+    owner: "{{ rundeck_sys_user }}"
+    group: "{{ rundeck_sys_group }}"
   notify:
     - restart rundeck
   loop: "{{ rundeck_config }}"
@@ -48,17 +56,21 @@
     regexp: "^{{ item.parameter }}"
     create: yes
     mode: "0644"
+    owner: "{{ rundeck_sys_user }}"
+    group: "{{ rundeck_sys_group }}"
   notify:
     - restart rundeck
-  loop: "{{ rundeck_framework }}"
+  loop: "{{ rundeck_framework + rundeck_framework_extra }}"
   loop_control:
     label: "{{ item.parameter }}"
 
-- name: configure rundeck policy
+- name: configure rundeck admin policy
   template:
     src: admin.aclpolicy.j2
     dest: "{{ rundeck_rdeckbase }}/etc/admin.aclpolicy"
     mode: "0644"
+    owner: "{{ rundeck_sys_user }}"
+    group: "{{ rundeck_sys_group }}"
   notify:
     - restart rundeck
 
@@ -67,6 +79,8 @@
     src: realm.properties.j2
     dest: "{{ rundeck_rdeckbase }}/server/config/realm.properties"
     mode: "0644"
+    owner: "{{ rundeck_sys_user }}"
+    group: "{{ rundeck_sys_group }}"
   notify:
     - restart rundeck
 
@@ -75,11 +89,15 @@
     path: /opt/rundeck/libext
     state: directory
     mode: "0755"
+    owner: "{{ rundeck_sys_user }}"
+    group: "{{ rundeck_sys_group }}"
 
 - name: install plugins
   get_url:
     url: "{{ item }}"
     dest: /opt/rundeck/libext
+    owner: "{{ rundeck_sys_user }}"
+    group: "{{ rundeck_sys_group }}"
   loop: "{{ rundeck_plugins }}"
   when: rundeck_plugins is defined
 

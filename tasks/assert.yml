@@ -21,6 +21,20 @@
       - rundeck_rdeckbase | length > 0
     quiet: yes
 
+- name: test if rundeck_sys_user is set correctly
+  assert:
+    that:
+      - rundeck_sys_user is defined
+      - rundeck_sys_user | length > 0
+    quiet: yes
+
+- name: test if rundeck_sys_group is set correctly
+  assert:
+    that:
+      - rundeck_sys_group is defined
+      - rundeck_sys_group | length > 0
+    quiet: yes
+
 - name: test if rundeck_xmx is set correctly
   assert:
     that:
